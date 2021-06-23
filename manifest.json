@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "Save Again (1)",
+  "version": "1.0",
+
+  "description": "Presents a right-click menu option to save a media file with ' (1)' added to name.",
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "permissions": [
+    "menus",
+    "downloads"
+  ]
+}
