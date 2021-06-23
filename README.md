@@ -1,2 +1,2 @@
 # save-again-extension
- Presents a right-click menu option to save a file with ' (1)' added to name.
+ Firefox Browser Extension. Present a right-click context menu option to save a media file with ' (1)' added to name.
