@@ -9,38 +9,6 @@ browser.menus.create({
   contexts: ["all"]
 });
 
-// Find out how to get url of image/video/audio and download it
-browser.menus.onClicked.addListener((info, tab) => {
-  // using menu.onClickData for info
-  if (info.menuItemId === "save-file") {
-
-    // findExtension returns array [index, ext] or false
-    var media_url = info.srcUrl;
-    var media_extension = findExtension(media_url);
-
-    // media_extension is a type of object
-    if (typeof(media_extension) === typeof([])) {
-      var file = findFilename(media_url, media_extension);
-      console.log("    " + media_url + " has an extension: " + media_extension[1]);
-      console.log("onClicked - filename is: " + file);
-    }
-    else {
-      console.log(media_url + " does not have an extension");
-      var file = findFilenameNoExt(media_url, info.mediaType);
-      console.log("onClicked - filename is: " + file);
-    }
-
-    // Downloading media
-    var downloading = browser.downloads.download({
-      url : media_url,
-      filename : file
-      //conflictAction : uniquify
-    });
-
-    downloading.then(onStartedDownload, onFailed)
-  }
-});
-
 function onStartedDownload(id) {
   console.log("Started downloading: " + id);
 }
@@ -183,3 +151,72 @@ function findFilenameNoExt(url, media_type){
   console.log("new filename: " + filename);
   return filename;
 }
+
+
+function logError(error) {
+  console.log(error);
+}
+
+function onActiveTab(tabs) {
+  console.log("URL of active tab: " + tabs[0].url);
+}
+
+function downloadMedia(info) {
+  // findExtension returns array [index, ext] or false
+  var media_url = info.srcUrl;
+  var media_extension = findExtension(media_url);
+
+  // media_extension is a type of object
+  if (typeof(media_extension) === typeof([])) {
+    var file = findFilename(media_url, media_extension);
+    console.log("    " + media_url + " has an extension: " + media_extension[1]);
+    console.log("onClicked - filename is: " + file);
+  }
+  else {
+    console.log(media_url + " does not have an extension");
+    var file = findFilenameNoExt(media_url, info.mediaType);
+    console.log("onClicked - filename is: " + file);
+  }
+
+  // Downloading media
+  var downloading = browser.downloads.download({
+    url : media_url,
+    filename : file
+    //conflictAction : uniquify
+  });
+
+  downloading.then(onStartedDownload, onFailed)
+}
+
+// Find out how to get url of image/video/audio and download it
+browser.menus.onClicked.addListener((info, tab) => {
+  // using menu.onClickData for info
+  if (info.menuItemId === "save-file") {
+    downloadMedia(info);
+  }
+});
+
+
+browser.commands.onCommand.addListener(function(name){
+  // simple notification to show keyboard shortcuts work
+  if (name == "save-again-notification") {
+    browser.notifications.create({
+        type: "basic",
+        title: "Save Again (1) Shortcut",
+        message: "my shortcut works"
+    })
+  }
+
+  // keyboard shortcut for Save Again (1)
+  // get the url of active tab
+  // use url to
+  if (name == "save-again-action") {
+    var tabs = browser.tabs.query({currentWindow: true, active: true});
+    tabs.then(onActiveTab, logError);
+    //var currentTab = browser.tabsget(tabs[0].id);
+    //var tabUrl = tabs[0].url;
+    //let activeTabId = browser.tabs.activateTab.id;
+    //let tab = browser.tabs.get(activeTabId);
+    //console.log("url: " + tabUrl);
+  }
+})

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Save Again (1)",
-  "version": "1.0",
+  "version": "1.1",
 
   "description": "Presents a right-click menu option to save a media file with ' (1)' added to name.",
 
@@ -9,8 +9,25 @@
     "scripts": ["background.js"]
   },
 
+  "commands": {
+    "save-again-notification": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F"
+      },
+      "description": "gives working notification"
+    },
+    "save-again-action": {
+      "suggested_key": {
+        "default": "Alt+C"
+      },
+      "description": "Saves media with ' (1)' inserted into filename"
+    }
+  },
+
   "permissions": [
     "menus",
-    "downloads"
+    "downloads",
+    "tabs",
+    "notifications"
   ]
 }
