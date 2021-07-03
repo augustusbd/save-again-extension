@@ -107,7 +107,7 @@ function findFilename(url, media_ext) {
     filename += url[k];
   }
   // add extension back onto filename
-  filename += ext;
+  filename += " (1)" + ext;
   return filename;
 }
 
