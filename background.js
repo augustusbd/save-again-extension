@@ -159,11 +159,12 @@ function logError(error) {
 
 function onActiveTab(tabs) {
   console.log("URL of active tab: " + tabs[0].url);
+  console.log("tab title: " + tabs[0].title);
+  downloadMedia(tabs[0].url);
 }
 
-function downloadMedia(info) {
+function downloadMedia(media_url, media_type="image") {
   // findExtension returns array [index, ext] or false
-  var media_url = info.srcUrl;
   var media_extension = findExtension(media_url);
 
   // media_extension is a type of object
@@ -174,7 +175,7 @@ function downloadMedia(info) {
   }
   else {
     console.log(media_url + " does not have an extension");
-    var file = findFilenameNoExt(media_url, info.mediaType);
+    var file = findFilenameNoExt(media_url, media_type);
     console.log("onClicked - filename is: " + file);
   }
 
@@ -192,7 +193,9 @@ function downloadMedia(info) {
 browser.menus.onClicked.addListener((info, tab) => {
   // using menu.onClickData for info
   if (info.menuItemId === "save-file") {
-    downloadMedia(info);
+    var info_url = info.srcUrl;
+    var info_media_type = info.mediaType;
+    downloadMedia(info_url, info_media_type);
   }
 });
 
@@ -211,8 +214,10 @@ browser.commands.onCommand.addListener(function(name){
   // get the url of active tab
   // use url to
   if (name == "save-again-action") {
+    // get only the current activate tab
     var tabs = browser.tabs.query({currentWindow: true, active: true});
     tabs.then(onActiveTab, logError);
+
     //var currentTab = browser.tabsget(tabs[0].id);
     //var tabUrl = tabs[0].url;
     //let activeTabId = browser.tabs.activateTab.id;
